@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/jquery.dataTables.min.css') }}">
+    <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/taskjs.js') }}"></script>
+{% endblock %}
+{% block body %}
+    <h1>Tasks list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Libelle</th>
+                <th>Creationdate</th>
+                <th>Limitedate</th>
+                <th>Enddate</th>
+                <th>Idtask</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for task in tasks %}
+            <tr>
+                <td><a href="{{ path('task_show', { 'idtask': task.idtask }) }}">{{ task.libelle }}</a></td>
+                <td>{% if task.creationdate %}{{ task.creationdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if task.limitedate %}{{ task.limitedate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if task.enddate %}{{ task.enddate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ task.idtask }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('task_show', { 'idtask': task.idtask }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('task_edit', { 'idtask': task.idtask }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('task_new') }}">Create a new task</a>
+        </li>
+    </ul>
+{% endblock %}

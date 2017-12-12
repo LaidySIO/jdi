@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Project" table="project">
+    <indexes>
+      <index name="fk_project_fos_user1_idx" columns="master"/>
+      <index name="fk_project_priority1_idx" columns="priorityid"/>
+    </indexes>
+    <id name="idproject" type="integer" column="idproject">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="libelle" type="string" column="libelle" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="creationdate" type="datetime" column="creationdate" nullable="false"/>
+    <field name="limitedate" type="datetime" column="limitedate" nullable="true"/>
+    <field name="enddate" type="datetime" column="enddate" nullable="true"/>
+    <many-to-one field="master" target-entity="User" fetch="LAZY">
+      <join-columns>
+        <join-column name="master" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="priorityid" target-entity="Priority" fetch="LAZY">
+      <join-columns>
+        <join-column name="priorityid" referenced-column-name="idpriority"/>
+      </join-columns>
+    </many-to-one>
+    <!--<many-to-many field="user" target-entity="FosUser" inversed-by="idproject" fetch="LAZY">-->
+    <many-to-many field="fosUser" target-entity="User" inversed-by="idproject" fetch="LAZY">
+      <join-table name="project_user">
+        <join-columns>
+          <join-column name="idproject" referenced-column-name="idproject"/>
+        </join-columns>
+        <inverse-join-columns>
+          <join-column name="user_id" referenced-column-name="id"/>
+        </inverse-join-columns>
+      </join-table>
+    </many-to-many>
+  </entity>
+</doctrine-mapping>

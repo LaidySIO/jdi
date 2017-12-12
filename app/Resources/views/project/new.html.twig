@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/jquery.datetimepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-multiselect.css') }}">
+    <script src="{{ asset('js/jquery.datetimepicker.full.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-multiselect.js') }}"></script>
+    <script src="{{ asset('js/projectjs.js') }}"></script>
+{% endblock %}
+{% block body %}
+    <h1>Project creation</h1>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <input type="submit" value="Create" />
+    {{ form_end(form) }}
+
+    <ul>
+        <li>
+            <a href="{{ path('project_index') }}">Back to the list</a>
+        </li>
+    </ul>
+
+{#    <select id="list-users" name="multiselect[]" multiple="multiple">
+        {% for user in User %}
+            <option value="{{ user.id|e }}">{{ user.username|e }}</option>
+        {% endfor %}
+    </select>#}
+{% endblock %}

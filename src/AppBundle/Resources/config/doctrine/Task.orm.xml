@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Task" table="task">
+    <indexes>
+      <index name="fk_task_project_idx" columns="projectmaster"/>
+      <index name="fk_task_fos_user1_idx" columns="usermaster"/>
+      <index name="fk_task_priority1_idx" columns="priorityid"/>
+    </indexes>
+    <id name="idtask" type="integer" column="idtask">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="libelle" type="string" column="libelle" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="creationdate" type="datetime" column="creationdate" nullable="false"/>
+    <field name="limitedate" type="datetime" column="limitedate" nullable="true"/>
+    <field name="enddate" type="datetime" column="enddate" nullable="true"/>
+    <many-to-one field="usermaster" target-entity="User" fetch="LAZY">
+      <join-columns>
+        <join-column name="usermaster"  referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="priorityid" target-entity="Priority" fetch="LAZY">
+      <join-columns>
+        <join-column name="priorityid" referenced-column-name="idpriority"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="projectmaster" target-entity="Project" fetch="LAZY">
+      <join-columns>
+        <join-column name="projectmaster" referenced-column-name="idproject"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-many field="fosUser" target-entity="User" inversed-by="tasktask" fetch="LAZY">
+      <join-table name="task_user">
+        <join-columns>
+          <join-column name="task_idtask" referenced-column-name="idtask"/>
+        </join-columns>
+        <inverse-join-columns>
+          <join-column name="fos_user_id" referenced-column-name="id"/>
+        </inverse-join-columns>
+      </join-table>
+    </many-to-many>
+  </entity>
+</doctrine-mapping>

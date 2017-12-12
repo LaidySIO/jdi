@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/jquery.dataTables.min.css') }}">
+    <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/priorityjs.js') }}"></script>
+{% endblock %}
+{% block body %}
+    <h1>Priorities list</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Code</th>
+            <th>Libelle</th>
+            <th>Color</th>
+            <th>Idpriority</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for priority in priorities %}
+            <tr>
+                <td><a href="{{ path('priority_show', { 'idpriority': priority.idpriority }) }}">{{ priority.code }}</a></td>
+                <td>{{ priority.libelle }}</td>
+                <td style="background-color: {{ priority.color }}"></td>
+                <td>{{ priority.idpriority }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('priority_show', { 'idpriority': priority.idpriority }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('priority_edit', { 'idpriority': priority.idpriority }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('priority_new') }}">Create a new priority</a>
+        </li>
+    </ul>
+{% endblock %}
