@@ -16,6 +16,7 @@
     <field name="creationdate" type="datetime" column="creationdate" nullable="false"/>
     <field name="limitedate" type="datetime" column="limitedate" nullable="true"/>
     <field name="enddate" type="datetime" column="enddate" nullable="true"/>
+    <field name="details" type="string" column="details" nullable="true"/>
     <many-to-one field="master" target-entity="User" fetch="LAZY">
       <join-columns>
         <join-column name="master" referenced-column-name="id"/>

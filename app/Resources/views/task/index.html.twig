@@ -8,36 +8,49 @@
 {% block body %}
     <h1>Tasks list</h1>
 
-    <table>
+    <table class="table-hover">
         <thead>
             <tr>
+                <th>N°</th>
                 <th>Libelle</th>
+                <th>Créateur</th>
                 <th>Creationdate</th>
                 <th>Limitedate</th>
                 <th>Enddate</th>
-                <th>Idtask</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for task in tasks %}
-            <tr>
-                <td><a href="{{ path('task_show', { 'idtask': task.idtask }) }}">{{ task.libelle }}</a></td>
-                <td>{% if task.creationdate %}{{ task.creationdate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if task.limitedate %}{{ task.limitedate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if task.enddate %}{{ task.enddate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{{ task.idtask }}</td>
-                <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('task_show', { 'idtask': task.idtask }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('task_edit', { 'idtask': task.idtask }) }}">edit</a>
-                        </li>
-                    </ul>
-                </td>
-            </tr>
+            {% if (app.user.username == task.usermaster) or (app.user.username in task.fosUser ) or (is_granted('ROLE_ADMIN')) %}
+                    <tr>
+                    <td>{{ loop.index }}</td>
+                    <td><a href="{{ path('task_show', { 'idtask': task.idtask }) }}">{{ task.libelle }}</a></td>
+                    <td>{{ task.usermaster }}</td>
+                    <td>{% if task.creationdate %}{{ task.creationdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>{% if task.limitedate %}
+                            {%  if task.limitedate|date('H:i:s') == '23:59:00' %}
+                                {{ task.limitedate|date('Y-m-d') }}
+                            {% else %}
+                                {{ task.limitedate|date('Y-m-d H:i') }}
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>{% if task.enddate %}{{ task.enddate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>
+                        <ul>
+                            <li>
+                                <a href="{{ path('task_show', { 'idtask': task.idtask }) }}">show</a>
+                            </li>
+                            {% if (app.user.username == task.usermaster)  or (is_granted('ROLE_ADMIN')) %}
+                                <li>
+                                    <a href="{{ path('task_edit', { 'idtask': task.idtask }) }}">edit</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </td>
+                </tr>
+            {% endif %}
         {% endfor %}
         </tbody>
     </table>

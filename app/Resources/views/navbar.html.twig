@@ -22,24 +22,33 @@
                 </li>
                 <li>
                     <a href="{{ path('task_index') }}">
-                            <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <span class="glyphicon glyphicon-envelope" aria-hidden="true"><span class="badge">0</span></span>
+                            <span class="glyphicon glyphicon-list-alt" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Taches"></span>
                     </a>
                 </li>
                 {% if is_granted('ROLE_ADMIN') %}
                     <li>
                         <a href="{{ path('priority_index') }}">
-                            <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+                            <span class="glyphicon glyphicon-fire" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Priorités"></span>
                         </a>
                     </li>
                 {% endif %}
                 <li>
-                    <a href="#">
-                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                    <a href="{{ path('message_index') }}">
+                        <span class="glyphicon glyphicon-envelope" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Messages"><span class="badge">0</span></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="dropdown-toggle" d="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <li><a href="#">Menu Administrateur</a></li>
+                                {% endif %}
+                                <li><a href="{{ path('fos_user_profile_edit') }}">Profil</a></li>
+                                <li><a href="#">Préférences</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="{{ path('fos_user_security_logout') }}">Déconnexion</a></li>
+                            </ul>
                     </a>
                 </li>
                 {#                <li class="dropdown">

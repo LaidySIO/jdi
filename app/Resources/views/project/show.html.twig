@@ -14,34 +14,76 @@
             </tr>
             <tr>
                 <th>Creationdate</th>
-                <td>{% if project.creationdate %}{{ project.creationdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if project.creationdate %}{{ project.creationdate|date('Y-m-d') }}{% endif %}</td>
             </tr>
+            {% if project.limitedate %}
             <tr>
                 <th>Limitedate</th>
-                <td>{% if project.limitedate %}{{ project.limitedate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    {%  if project.limitedate|date('H:i:s') == '23:59:00' %}
+                        {{ project.limitedate|date('Y-m-d') }}
+                    {% else %}
+                        {{ project.limitedate|date('Y-m-d H:i:s') }}
+                    {% endif %}
+                </td>
             </tr>
+            {% endif %}
             <tr>
                 <th>Enddate</th>
-                <td>{% if project.enddate %}{{ project.enddate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if project.enddate %}
+                        {{ project.enddate|date('Y-m-d H:i') }}
+                    {% else %}
+                        <i>Projet en cours</i>
+                    {% endif %}
+                </td>
             </tr>
+            {% if project.details %}
             <tr>
-                <th>Idproject</th>
-                <td>{{ project.idproject }}</td>
+                <th>Informations complémentaires</th>
+                <td>{{ project.details }}</td>
             </tr>
+            {% endif %}
+            {% if project.fosUser %}
+            <tr>
+                <th>Utilisateurs</th>
+                <td>
+                    <button id="show-user-in-project">Afficher</button>
+                    <ul class="user-in-project">
+                {% for users in project.fosUser %}
+                    <li><a href="{{ path('fos_user_profile_show', {'fosUser':users.id}) }}" {{ users.id }}>{{ users }}</a></li>
+                {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            {% endif %}
+            {% if task %}
+            <tr>
+                <th>Taches parent</th>
+                <td>
+                    <button id="show-task-in-project">Afficher</button>
+                    <ul class="task-in-project">
+                        {% for tasks in task %}
+                            <li><a href="{{ path('task_show', { 'idtask': tasks.idtask}) }}" target="_blank">{{ tasks.libelle }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            {% endif %}
         </tbody>
     </table>
-
     <ul>
         <li>
             <a href="{{ path('project_index') }}">Back to the list</a>
         </li>
-        <li>
-            <a href="{{ path('project_edit', { 'idproject': project.idproject }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
+        {% if (app.user.username == project.master)  or (is_granted('ROLE_ADMIN')) %}
+            <li>
+                <a href="{{ path('project_edit', { 'idproject': project.idproject }) }}">Edit</a>
+            </li>
+            <li>
+                {{ form_start(delete_form) }}
+                    <input type="submit" value="Delete">
+                {{ form_end(delete_form) }}
+            </li>
+        {% endif %}
     </ul>
 {% endblock %}

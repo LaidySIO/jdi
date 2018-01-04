@@ -15,7 +15,12 @@
       </options>
     </field>
     <field name="date" type="datetime" column="date" nullable="false"/>
-    <many-to-many field="user" target-entity="FosUser" inversed-by="idmessage" fetch="LAZY">
+    <many-to-one field="expeditor" target-entity="User" fetch="LAZY">
+      <join-columns>
+        <join-column name="expeditor" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-many field="fosUser" target-entity="User" inversed-by="idmessage" fetch="LAZY">
       <join-table name="message_user">
         <join-columns>
           <join-column name="idmessage" referenced-column-name="idmessage"/>

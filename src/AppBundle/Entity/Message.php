@@ -20,6 +20,16 @@ class Message
     private $message;
 
     /**
+     * @var \AppBundle\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="expeditor", referencedColumnName="id")
+     * })
+     */
+    private $expeditor;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="subject", type="text", nullable=false)
@@ -42,6 +52,29 @@ class Message
      */
     private $idmessage;
 
+    /*/**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\FosUser", inversedBy="idmessage")
+     * @ORM\JoinTable(name="message_user",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="idmessage", referencedColumnName="idmessage")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     *   }
+     * )
+     */
+   /* private $user;
+
+    /**
+     * Constructor
+     */
+    /*public function __construct()
+    {
+        $this->user = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    */
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
@@ -55,14 +88,14 @@ class Message
      *   }
      * )
      */
-    private $user;
+    private $fosUser;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->user = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->fosUser = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -132,18 +165,58 @@ class Message
     /**
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getUser()
+    public function getFosUser()
     {
-        return $this->user;
+        return $this->fosUser;
     }
 
     /**
+     * @param \Doctrine\Common\Collections\Collection $fosUser
+     */
+    public function setFosUser($fosUser)
+    {
+        $this->fosUser = $fosUser;
+    }
+    /*
+        /**
+         * @return \Doctrine\Common\Collections\Collection
+         */
+   /* public function getUser()
+    {
+        return $this->user;
+    }
+*/
+  /*  /**
      * @param \Doctrine\Common\Collections\Collection $user
      */
-    public function setUser($user)
+   /* public function setUser($user)
     {
         $this->user = $user;
     }
+*/
+
+    public function __toString()
+    {
+        return $this->subject;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getExpeditor()
+    {
+        return $this->expeditor;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\Collection $expeditor
+     */
+    public function setExpeditor($expeditor)
+    {
+        $this->expeditor = $expeditor;
+    }
+
+
 
 }
 

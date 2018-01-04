@@ -2,10 +2,12 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Priority;
 use AppBundle\Entity\Project;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * Project controller.
@@ -23,13 +25,37 @@ class ProjectController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-
         $projects = $em->getRepository('AppBundle:Project')->findAll();
+        //$projects = $em->getRepository('AppBundle:Project')->findBy(array('master' => $this->getUser()));
 
-        return $this->render('project/index.html.twig', array(
-            'projects' => $projects,
-        ));
+
+       /* $projects = $em->getRepository('AppBundle:Project')->findByFosUser(
+            array("fosUser" => $this->getUser())
+            //array("fosUser" => in_array($this->getUsername(),->getFosUser()->toArray()))
+        );
+        $accessor = PropertyAccess::createPropertyAccessor();
+        foreach ($projects as $p){
+
+            //echo implode($p->getFosUser()->getValues());
+            echo implode($p->getFosUser()->toArray());
+            //$p = new Project();
+            //$pp = $em->getRepository('AppBundle:Project')->findOneBy(array("idProject" => $p["libelle"]));
+            //$projects["fosUser"] = $p["fosUser"];
+            //var_dump( $p->getIdproject());
+            //var_dump($accessor->getValue($p, 'fosUSer'));
+
+        }*/
+
+
+        return $this->render(
+            'project/index.html.twig',
+            array(
+                'projects' => $projects,
+            )
+        );
+
     }
+
 
     /**
      * Creates a new project entity.
@@ -47,7 +73,13 @@ class ProjectController extends Controller
             // Affectation de la valeur du champs limitedate
             $dateInput = $form["date"]->getData(); // On recupere le champs de la date
             $timeInput = $form["time"]->getData(); //On recupere le champs de l'heure
-            $myDateTime = \DateTime::createFromFormat('d-m-Y H:i:s', $dateInput." ".$timeInput.":00"); //Concatenation
+            if($timeInput == null){
+                $myDateTime = \DateTime::createFromFormat('d-m-Y H:i:s', $dateInput." 23:59:00"); //Concatenation
+            }
+            else{
+                $myDateTime = \DateTime::createFromFormat('d-m-Y H:i:s', $dateInput." ".$timeInput.":00"); //Concatenation
+
+            }
             $timestramp = $myDateTime->format('Y-m-d H:i:s');
             $dateTime = \DateTime::createFromFormat("Y-m-d H:i:s",$timestramp);
             $project->setLimitedate($dateTime);
@@ -67,9 +99,10 @@ class ProjectController extends Controller
             $form->get('date')->setData($d);
 
             //Initialisation de l'input de l'heure
-            $t = date("H:i");
-            $form->get('time')->setData($t);
+            /*$t = date("H:i");
+            $form->get('time')->setData($t);*/
         }
+
 
         return $this->render('project/new.html.twig', array(
             'project' => $project,
@@ -86,9 +119,19 @@ class ProjectController extends Controller
     public function showAction(Project $project)
     {
         $deleteForm = $this->createDeleteForm($project);
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT t
+            FROM AppBundle:Task t
+            WHERE t.projectmaster = :project
+            ORDER BY t.limitedate ASC'
+        )->setParameter('project', $project->getIdproject());
+
+        $taks = $query->getResult();
 
         return $this->render('project/show.html.twig', array(
             'project' => $project,
+            'task' => $taks,
             'delete_form' => $deleteForm->createView(),
         ));
     }

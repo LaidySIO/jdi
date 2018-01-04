@@ -7,6 +7,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class TaskType extends AbstractType
 {
@@ -17,6 +19,15 @@ class TaskType extends AbstractType
     {
         $builder
             ->add('libelle')
+            ->add('is_date', CheckboxType::class, array(
+                'label' => 'Définir une une date',
+                'mapped' => false,
+                'required' => false,
+                'attr' => array(
+                    'class' => 'is_date',
+                    'id' => 'is_date'
+                )
+            ))
             ->add('date', TextType::class, array(
                 'label' => 'Date Limite',
                 'mapped' => false,
@@ -48,6 +59,15 @@ class TaskType extends AbstractType
             ))
             ->add('priorityid')
             ->add('projectmaster')
+            ->add('details', TextareaType::class, array(
+                'label' => 'Informations complémentaires',
+                'required' => false,
+                'attr' => array(
+                    'class' => 'details',
+                    'style' => 'width:250px;height:250px'
+                )
+            ))
+            //->add('details')
             ->add('fosUser');
     }
     

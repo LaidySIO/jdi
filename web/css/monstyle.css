@@ -12,8 +12,60 @@ body{
     margin-right: 10px;
     padding: 10px 10px;
 }
+body.fos{
+    margin: 0;
+}
 
+/*General*/
+h1{
+    text-align: center;
+}
 
+.dataTables_wrapper{
+    margin: 0px 10px;
+}
+
+body table.dataTable.no-footer{
+    border-collapse : collapse;
+    border: 1px solid #a7a7a7;
+    margin: 5px 0px;
+
+}
+body table.dataTable.no-footer td{
+    border-bottom: 1px solid #a7a7a7;
+    border-right: 1px solid #a7a7a7;
+
+}
+
+body table.dataTable.no-footer th{
+    border-bottom: 3px solid #a7a7a7;
+    border-right: 1px solid #a7a7a7;
+
+}
+
+input.form-control{
+    width: 30%;
+}
+select.form-control{
+    width: auto;
+}
+
+ul.multiselect-container,button.multiselect{
+    /*width: 30%;*/
+}
+
+/*General*/
+
+/*  Login */
+form.login{
+
+}
+
+.login input.form-control{
+    width: 50%;
+}
+
+/* Login */
 
 /*Bar Menu*/
 span.badge{
@@ -60,23 +112,86 @@ ul.nav-tabs > li.active > a:focus{ /*onglets*/
     margin: auto;
     text-align: center;
 }
+
+.tab-project, .tab-task, .tab-message{
+    background-color:#eeeaea ;
+    margin: 10px 10px 10px 10px;
+}
+
+div.tooltip.fade.bottom.in{
+    top : 50px !important;
+}
+
+div.tooltip.fade.bottom{
+    top : 50px !important;
+}
+
+.tab-task table{
+    width: 100%
+}
+
+.tab-project table{
+    width : 100%;
+}
+.tab-message table{
+    width : 100%;
+}
+
 /*index site*/
 
 
+
+
+
+
 /*Project */
+
+/*#appbundle_project_is_time,#appbundle_project_is_time + label{*/
+    /*display: none;*/
+/*}*/
 #appbundle_project_time{ /*timepicker*/
+    display: none;
+}
+
+#appbundle_project_date{ /*timepicker*/
     display: none;
 }
 
 /*Project */
 
+.index-project-table{
+
+}
+
+.user-in-project{
+    display:none ;
+}
+
+
+.task-in-project{
+    display: none;
+}
+
 
 /*Task */
 
+#appbundle_task_date{
+    display: none;
+}
+
+#appbundle_task_time{
+    display : none;
+}
+
+.user-in-task{
+    display:none ;
+}
 
 /*Task */
 
-
+.project-in-task{
+    display: none;
+}
 
 
 /*Priority */

@@ -5,7 +5,9 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Task;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+
 
 /**
  * Task controller.
@@ -22,13 +24,29 @@ class TaskController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
 
+        $em = $this->getDoctrine()->getManager();
+       // $user = $this->getUser();
+
+    //    $tasks = $em->getRepository('AppBundle:Task')->findByProjectmaster($user->getId());
+/*
+        $user = $this->getUser();
+        $tasks = $em->getRepository('AppBundle:Task')->findByProjectmaster($user->getId());
+
+        foreach ($tasks as $task){
+            $tasks
+            $task->prioritycolor = $task->getPriorityid()->getColor();
+        }
+*/
         $tasks = $em->getRepository('AppBundle:Task')->findAll();
 
-        return $this->render('task/index.html.twig', array(
+        $priorities = $em->getRepository('AppBundle:Priority')->findAll();
+
+       return $this->render('task/index.html.twig', array(
             'tasks' => $tasks,
+            'priorities' => $priorities,
         ));
+       //return var_dump($tasks);
     }
 
     /**
@@ -54,7 +72,7 @@ class TaskController extends Controller
 
             $em = $this->getDoctrine()->getManager();
             $task->setCreationDate(new \DateTime());
-            $task->getUsermaster($this->getUser());
+            $task->setUsermaster($this->getUser());
             $em->persist($task);
             $em->flush();
 
@@ -86,8 +104,20 @@ class TaskController extends Controller
     {
         $deleteForm = $this->createDeleteForm($task);
 
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT p
+            FROM AppBundle:Project p, AppBundle:Task t
+            WHERE p.idproject = t.projectmaster
+            and t.idtask = :task
+            ORDER BY p.limitedate ASC'
+        )->setParameter('task', $task->getIdtask());
+
+        $project = $query->getResult();
+
         return $this->render('task/show.html.twig', array(
             'task' => $task,
+            'project' => $project,
             'delete_form' => $deleteForm->createView(),
         ));
     }

@@ -80,6 +80,13 @@ class Task
     private $projectmaster;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="details", type="string", length=30000, nullable=true)
+     */
+    private $details;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\FosUser", inversedBy="tasktask")
@@ -93,6 +100,8 @@ class Task
      * )
      */
     private $fosUser;
+
+
 
     /**
      * Constructor
@@ -244,6 +253,22 @@ class Task
     public function setFosUser($fosUser)
     {
         $this->fosUser = $fosUser;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDetails()
+    {
+        return $this->details;
+    }
+
+    /**
+     * @param string $details
+     */
+    public function setDetails($details)
+    {
+        $this->details = $details;
     }
 
 }

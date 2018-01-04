@@ -18,5 +18,9 @@ $( document ).ready(function() {
     }
 
     $("table").dataTable();
+
+    if ($("table").attr("class") == "table-hover") {
+        $("table").DataTable();
+    }
 });
 

@@ -19,8 +19,8 @@ $( document ).ready(function() {
             format: 'H:i'
         });
     }
-    if($('#appbundle_task_fosUser').attr("id") != undefined) {
-        $('#appbundle_task_fosUser').multiselect({
+    if($('#appbundle_message_fosUser').attr("id") != undefined) {
+        $('#appbundle_message_fosUser').multiselect({
             includeSelectAllOption: true,
             enableFiltering: true
         });

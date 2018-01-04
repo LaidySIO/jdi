@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * Project
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="project", indexes={@ORM\Index(name="fk_project_fos_user1_idx", columns={"master"}), @ORM\Index(name="fk_project_priority1_idx", columns={"priorityid"})})
  * @ORM\Entity
  */
-class Project
+class Project extends EntityRepository
 {
     /**
      * @var string
@@ -68,6 +69,13 @@ class Project
      * })
      */
     private $priorityid;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="details", type="string", length=30000, nullable=true)
+     */
+    private $details;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -246,9 +254,41 @@ class Project
         $this->fosUser = $fosUser;
     }
 
+   public function findByFosUser($fosUser){
+        $query = $this->createQueryBuilder('a')
+              ->select('a')
+              ->leftJoin('a.fosUSer', 'c')
+              ->where('c.user_id = :c')
+              ->addSelect('c');
+
+          $query = $query->add('where', $query->expr()->in('c', ':c'))
+              ->setParameter('c', $fosUser)
+              ->getQuery()
+              ->getResult();
+
+
+          return $query;
+      }
+
     public function __toString()
     {
         return $this->libelle;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDetails()
+    {
+        return $this->details;
+    }
+
+    /**
+     * @param string $details
+     */
+    public function setDetails($details)
+    {
+        $this->details = $details;
     }
 
 }

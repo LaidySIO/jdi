@@ -1,6 +1,10 @@
 $( document ).ready(function() {
 
+    // SI EDIT
     if ($("#appbundle_project_date").attr("id") != undefined){
+        $("#appbundle_project_is_date").click(function () {
+            $("#appbundle_project_date").toggle();
+        });
         $.datetimepicker.setLocale('fr');
         $('#appbundle_project_date').datetimepicker({
             timepicker:false,
@@ -25,7 +29,32 @@ $( document ).ready(function() {
             enableFiltering: true
         });
     }
+    //FIN SI EDIT
 
-    $("table").DataTable();
+
+    //SI INDEX
+    if ($("table").attr("class") == "table-hover") {
+        $("table").DataTable();
+    }
+    //FIN SI INDEX
+    //SI SHOW
+    if ($("table").attr("class") == undefined) {
+        $("button#show-task-in-project").click(function () {
+            $(".task-in-project").toggle();
+        });
+        $("button#show-user-in-project").click(function () {
+            $(".user-in-project").toggle();
+        });
+    }
+    //FIN SI SHOW
+
+    // $("form").addClass("form-horizontal");
+    // $("label").parent("div").addClass("form-group");
+    // $("label").addClass("col-sm-2 control-label");
+
+
+
 });
+
+
 
