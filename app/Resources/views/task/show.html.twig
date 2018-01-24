@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <script src="{{ asset('js/taskjs.js') }}"></script>
+{% endblock %}
+{% block body %}
+    <h1>Task</h1>
+
+    <table class="table borderless">
+        <tbody>
+            <tr>
+                <th>Libelle</th>
+                <td>{{ task.libelle }}</td>
+            </tr>
+            <tr>
+                <th>Creationdate</th>
+                <td>{% if task.creationdate %}{{ task.creationdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            {% if task.limitedate %}
+            <tr>
+                <th>Limitedate</th>
+                <td>{% if task.limitedate %}
+                        {%  if task.limitedate|date('H:i:s') == '23:59:00' %}
+                            {{ task.limitedate|date('Y-m-d') }}
+                        {% else %}
+                            {{ task.limitedate|date('Y-m-d H:i') }}
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endif %}
+            {% if task.enddate %}
+            <tr>
+                <th>Enddate</th>
+                <td>{% if task.enddate %}{{ task.enddate|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            {% endif %}
+            {% if task.user %}
+                <tr>
+                    <th>Utilisateurs</th>
+                    <td>
+                        <button id="show-user-in-task">Afficher  ({{ task.user|length }}) </button>
+                        <ul class="user-in-task">
+                            {% for users in task.user %}
+                                <li><a href="{{ path('fos_user_profile_show', {'fosUser':users.id}) }}" {{ users.id }}>{{ users }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            {% endif %}
+            <tr>
+                {% for projects in project %}
+                <th>Projets Parent</th>
+                <td>
+                    <button id="show-project-in-task">Afficher ({{ project|length }})</button>
+                    <ul class="project-in-task">
+                        <li><a href="{{ path('project_show', { 'idproject': projects.idproject}) }}" target="_blank">{{ projects.libelle }}</a></li>
+                    </ul>
+                </td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('task_index') }}">Back to the list</a>
+        </li>
+        {% if (app.user.username == task.usermaster)  or (is_granted('ROLE_ADMIN')) %}
+            <li>
+                <a href="{{ path('task_edit', { 'idtask': task.idtask }) }}">Edit</a>
+            </li>
+            <li>
+                {{ form_start(delete_form) }}
+                    <input type="submit" value="Delete">
+                {{ form_end(delete_form) }}
+            </li>
+        {% endif %}
+    </ul>
+{% endblock %}

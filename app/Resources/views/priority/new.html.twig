@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/colorpicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
+    <script src="{{ asset('js/colorpicker.js') }}"></script>
+    <script src="{{ asset('js/priorityjs.js') }}"></script>
+{% endblock %}
+{% block body %}
+    <h1>Priority creation</h1>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div id="colorSelector">
+        <div></div>
+    </div>
+    <input type="submit" value="Create" />
+    {{ form_end(form) }}
+
+
+
+    <ul>
+        <li>
+            <a href="{{ path('priority_index') }}">Back to the list</a>
+        </li>
+    </ul>
+{% endblock %}

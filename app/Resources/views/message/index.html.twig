@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/jquery.dataTables.min.css') }}">
+    <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/message.js') }}"></script>
+{% endblock %}
+{% block body %}
+    <h1>Messages </h1>
+    <ul class="nav nav-tabs ul-index-tab" role="tablist">
+        <li role="presentation" class="active li-index-tab"><a href="#received" aria-controls="received" role="tab"
+                                                               data-toggle="tab">Messages reçus</a></li>
+        <li role="presentation" class="li-index-tab"><a href="#sended" aria-controls="sended" role="tab"
+                                                        data-toggle="tab">Méssages
+                envoyés</a></li>
+    </ul>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane tab-received active" id="received">
+            {{ messages|length }}
+            <table class="table-hover">
+                <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Expediteur</th>
+                    <th>Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for message in messages %}
+                    {% if app.user.username in message.user %}
+                        <tr>
+                            {#% if (app.user.username == project.master) or (app.user.username in project.user ) %#}
+                            <td>
+                                <a href="{{ path('message_show', { 'idmessage': message.idmessage }) }}">{{ message.message }}</a>
+                            </td>
+                            <td>
+                                <a href="{{ path('fos_user_profile_show', { 'id': message.expeditor }) }}">{{ message.expeditor }}</a>
+                            </td>
+                            <td>{% if message.date %}{{ message.date|date('Y-m-d H:i:s') }}{% endif %}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div role="tabpanel" class="tab-pane tab-send " id="sended">
+            <table class="table-hover">
+                <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>destinataires</th>
+                    <th>Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for message in messages %}
+                    {% if app.user.username == message.expeditor %}
+                        <tr>
+                            {#% if (app.user.username == project.master) or (app.user.username in project.user ) %#}
+                            <td>
+                                <a href="{{ path('message_show', { 'idmessage': message.idmessage }) }}">{{ message.message }}</a>
+                            </td>
+                            <td>
+                                {% for user in message.user %}
+                                    <a href="{{ path('fos_user_profile_show', { 'id': message.expeditor }) }}">{{ user }}</a>
+                                    {%  if not loop.last%}
+                                        ,&nbsp;
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>{% if message.date %}{{ message.date|date('Y-m-d H:i:s') }}{% endif %}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <ul>
+        <li>
+            <a href="{{ path('message_new') }}">Create a new message</a>
+        </li>
+    </ul>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/jquery.datetimepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-multiselect.css') }}">
+    <script src="{{ asset('js/jquery.datetimepicker.full.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-multiselect.js') }}"></script>
+    <script src="{{ asset('js/taskjs.js') }}"></script>
+{% endblock %}
+{% block body %}
+    <h1>Task edit</h1>
+
+    {{ form_start(edit_form) }}
+        {{ form_widget(edit_form) }}
+        <input type="submit" value="Edit" />
+    {{ form_end(edit_form) }}
+    <a href="{{ path('task_close', {'idtask':task.idtask}) }}" >close</a>
+
+
+    <ul>
+        <li>
+            <a href="{{ path('task_index') }}">Back to the list</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

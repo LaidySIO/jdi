@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <script src="{{ asset('js/priorityjs.js') }}"></script>
+{% endblock %}
+{% block body %}
+    <h1>Priority</h1>
+
+    <table class="table-hover">
+        <tbody>
+        <tr>
+            <th>Code</th>
+            <td>{{ priority.code }}</td>
+        </tr>
+        <tr>
+            <th>Libelle</th>
+            <td>{{ priority.libelle }}</td>
+        </tr>
+        <tr>
+            <th>Color</th>
+            <td style="background-color:{{ priority.color }} "></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('PriorityAdmin') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('priority_edit', { 'idpriority': priority.idpriority }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+            <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

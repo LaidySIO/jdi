@@ -1,0 +1,157 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+{% block body %}
+    <h1>{{ app.user.username|capitalize}}</h1>
+    <div class="div-index-tab">
+        <ul class="nav nav-tabs ul-index-tab" role="tablist">
+            <li role="presentation" class="active li-index-tab"><a href="#project" aria-controls="project" role="tab" data-toggle="tab">Mes projets</a></li>
+            <li role="presentation" class="li-index-tab"><a href="#task" aria-controls="task" role="tab" data-toggle="tab">Mes taches</a></li>
+            <li role="presentation" class="li-index-tab"><a href="#message" aria-controls="message" role="tab" data-toggle="tab">Messages</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane tab-project active" id="project">
+                <table class="table-hover">
+                    <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Intitulé</th>
+                        <th>Créateur</th>
+                        <th>Date de création</th>
+                        <th>Date butoire</th>
+                        <th>Date de cloture</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for project in projects %}
+                        {% if (app.user.username == project.master) or (app.user.username in project.user ) or (is_granted('ROLE_ADMIN')) %}
+                            <tr >
+                                <td>{{ loop.index }}</td>
+                                <td><a href="{{ path('project_show', { 'idproject': project.idproject }) }}">{{ project.libelle }}</a></td>
+                                <td>{{ project.master }}</td>
+                                <td>{% if project.creationdate %}{{ project.creationdate|date('Y-m-d H:i') }}{% endif %}</td>
+                                <td>{% if project.limitedate %}
+                                        {%  if project.limitedate|date('H:i:s') == '23:59:00' %}
+                                            {{ project.limitedate|date('Y-m-d') }}
+                                        {% else %}
+                                            {{ project.limitedate|date('Y-m-d H:i') }}
+                                        {% endif %}
+                                    {% else %}
+                                        <i> Pas de date limite</i>
+                                    {% endif %}
+
+                                </td>
+                                <td>{% if project.enddate %}
+                                        {{ project.enddate|date('Y-m-d H:i:s') }}
+                                    {% else %}
+                                        <i>Projet en cours</i>
+                                    {% endif %}</td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ path('project_show', { 'idproject': project.idproject }) }}">Afficher</a>
+                                        </li>
+                                        {% if (app.user.username == project.master)  or (is_granted('ROLE_ADMIN')) %}
+                                            <li>
+                                                <a href="{{ path('project_edit', { 'idproject': project.idproject }) }}">Modifier</a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div role="tabpanel" class="tab-pane tab-task" id="task">
+                <table class="table-hover">
+                    <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Libelle</th>
+                        <th>Créateur</th>
+                        <th>Creationdate</th>
+                        <th>Limitedate</th>
+                        <th>Enddate</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for task in tasks %}
+                        {% if (app.user.username == task.usermaster) or (app.user.username in task.user ) or (is_granted('ROLE_ADMIN')) %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td><a href="{{ path('task_show', { 'idtask': task.idtask }) }}">{{ task.libelle }}</a></td>
+                                <td>{{ task.usermaster }}</td>
+                                <td>{% if task.creationdate %}{{ task.creationdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                <td>{% if task.limitedate %}
+                                        {%  if task.limitedate|date('H:i:s') == '23:59:00' %}
+                                            {{ task.limitedate|date('Y-m-d') }}
+                                        {% else %}
+                                            {{ task.limitedate|date('Y-m-d H:i') }}
+                                        {% endif %}
+                                    {% else %}
+                                        <i> Pas de date limite</i>
+                                    {% endif %}
+
+                                </td>
+                                <td>{% if task.enddate %}
+                                        {{ task.enddate|date('Y-m-d H:i:s') }}
+                                    {% else %}
+                                        <i>Projet en cours</i>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ path('task_show', { 'idtask': task.idtask }) }}">Afficher</a>
+                                        </li>
+                                        {% if (app.user.username == task.usermaster)  or (is_granted('ROLE_ADMIN')) %}
+                                            <li>
+                                                <a href="{{ path('task_edit', { 'idtask': task.idtask }) }}">Modifier</a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div role="tabpanel" class="tab-pane tab-message" id="message">
+                <table class="table-hover">
+                    <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Expediteur</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for message in messages %}
+                        {% if app.user.username in message.user %}
+                            <tr>
+                                {#% if (app.user.username == project.master) or (app.user.username in project.fosUser ) %#}
+                                <td class="col-md-4">
+                                    <a href="{{ path('message_show', { 'idmessage': message.idmessage }) }}">{{ message.message }}</a>
+                                </td>
+                                <td class="col-md-4">
+                                    <a href="{{ path('fos_user_profile_show', { 'id': message.expeditor }) }}">{{ message.expModifieror }}</a>
+                                </td>
+                                <td class="col-md-4">{% if message.date %}{{ message.date|date('Y-m-d H:i:s') }}{% endif %}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

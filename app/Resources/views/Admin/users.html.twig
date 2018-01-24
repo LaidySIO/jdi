@@ -1,0 +1,56 @@
+{% extends "base.html.twig" %}
+
+{% block title %}AppBundle:Admin:index{% endblock %}
+
+{% block body %}
+<h1>Bienvenue sur la gestion des utilisateurs</h1>
+
+    <table>
+        <tr>
+            <th>id</th>
+            <th>Nom</th>
+            <th>roles</th>
+            <th>Admin</th>
+            <th>Supprimer</th>
+
+        </tr>
+
+
+    {% for users in users %}
+        <tr>
+
+
+            <td>{{ users.id }}</td>
+            <td>   {{ users.username }}  </td>
+
+            <td>
+                {% for role in users.roles %}
+                    {{ role }}
+                {% endfor %}
+            </td>
+            {% set from_user_admin = false %}
+            {% for role in users.roles %}
+                {% if role == 'ROLE_ADMIN' %}{% set from_user_admin = true %}{% endif %}
+            {% endfor %}
+            {% if from_user_admin == false %}
+                <td>
+                    <a href="{{ path('promoteUserdmin', {'id':users.id}) }}" >promouvoir</a>
+                </td>
+
+            {% else %}
+                <td>
+                    <a href="{{ path('disgraceUserAdmin', {'id':users.id}) }}">retrograder</a>
+                </td>
+
+            {% endif %}
+                <td>
+                    <a href="{{ path('removeUserAdmin', {'id':users.id}) }}" >Supprimer</a>
+                </td>
+
+        </tr>
+
+        </P>
+    {% endfor %}
+    </table>
+
+{% endblock %}

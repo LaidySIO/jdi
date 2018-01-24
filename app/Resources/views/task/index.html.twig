@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/jquery.dataTables.min.css') }}">
+    <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/taskjs.js') }}"></script>
+{% endblock %}
+{% block body %}
+    <h1>Tasks list</h1>
+
+    <table class="table-hover">
+        <thead>
+        <tr>
+            <th>N°</th>
+            <th>Libelle</th>
+            <th>Créateur</th>
+            <th>Creationdate</th>
+            <th>Limitedate</th>
+            <th>Enddate</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for task in tasks %}
+            {% for priority in priorities if priority.libelle == task.priorityid %}
+                <tr style="background-color: {{ priority.color }}3d" class="index-table-priority">
+                    <td>{{ loop.parent.loop.index }}</td>
+                    <td><a href="{{ path('task_show', { 'idtask': task.idtask }) }}">{{ task.libelle }}</a></td>
+                    <td>{{ task.usermaster }}</td>
+                    <td>{% if task.creationdate %}{{ task.creationdate|date('Y-m-d H:i') }}{% endif %}</td>
+                    <td>{% if task.limitedate %}
+                            {% if task.limitedate|date('H:i') == '23:59' %}
+                                {{ task.limitedate|date('Y-m-d') }}
+                            {% else %}
+                                {{ task.limitedate|date('Y-m-d H:i') }}
+                            {% endif %}
+                        {% else %}
+                            <i>Pas de date limite</i>
+                        {% endif %}
+                    </td>
+                    <td>{% if task.enddate %}
+                            {{ task.enddate|date('Y-m-d H:i') }}
+                        {% else %}
+                            <i>Tâche en cours</i>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <ul>
+                            <li>
+                                <a href="{{ path('task_show', { 'idtask': task.idtask }) }}">show</a>
+                            </li>
+                            {% if (app.user.username == task.usermaster)  or (is_granted('ROLE_ADMIN')) %}
+                                <li>
+                                    <a href="{{ path('task_edit', { 'idtask': task.idtask }) }}">edit</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('task_new') }}">Create a new task</a>
+        </li>
+    </ul>
+{% endblock %}

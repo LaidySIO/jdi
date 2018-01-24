@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/jquery.dataTables.min.css') }}">
+    <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/projectjs.js') }}"></script>
+{% endblock %}
+{% block body %}
+    <h1>Liste des projets </h1>
+
+    <table class="table-hover">
+        <thead>
+        <tr>
+
+            <th>N°</th>
+            <th>Intitulé</th>
+            <th>Créateur</th>
+            <th>Date de création</th>
+            <th>Date butoire</th>
+            <th>Date de cloture</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for project in projects %}
+            {% for priority in priorities if priority.libelle == project.priorityid %}
+                <tr style="background-color: {{ priority.color }}3d" class="index-table-priority">
+                    <td>{{ loop.index }}</td>
+                    <td>
+                        <a href="{{ path('project_show', { 'idproject': project.idproject }) }}">{{ project.libelle }}</a>
+                    </td>
+                    <td>{{ project.master }}</td>
+                    <td>{% if project.creationdate %}{{ project.creationdate|date('Y-m-d H:i') }}{% endif %}</td>
+                    <td>{% if project.limitedate %}
+                            {% if project.limitedate|date('H:i:s') == '23:59:00' %}
+                                {{ project.limitedate|date('Y-m-d') }}
+                            {% else %}
+                                {{ project.limitedate|date('Y-m-d H:i') }}
+                            {% endif %}
+
+                        {% else %}
+                            <i>Pas de date limite</i>
+                        {% endif %}
+                    </td>
+                    <td>{% if project.enddate %}
+                            {{ project.enddate|date('Y-m-d H:i:s') }}
+                        {% else %}
+                            <i>Projet en cours</i>
+                        {% endif %}</td>
+                    <td>
+                        <ul>
+                            <li>
+                                <a href="{{ path('project_show', { 'idproject': project.idproject }) }}">show</a>
+                            </li>
+                            {% if (app.user.username == project.master)  or (is_granted('ROLE_ADMIN')) %}
+                                <li>
+                                    <a href="{{ path('project_edit', { 'idproject': project.idproject }) }}">edit</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('project_new') }}">Create a new project</a>
+        </li>
+    </ul>
+{% endblock %}
